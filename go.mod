@@ -16,6 +16,6 @@ require (
 	golang.org/x/net v0.0.0-20190110200230-915654e7eabc // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
-	tianwei.pro/business v0.0.1 // indirect
+	tianwei.pro/business v0.0.2 // indirect
 	tianwei.pro/smart v0.0.0-20190113040010-d33287b8e896 // indirect
 )

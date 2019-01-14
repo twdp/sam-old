@@ -74,6 +74,8 @@ tianwei.pro/business v0.0.0-20190113035810-87409923d884/go.mod h1:9Ftjgn0/yGnCxc
 tianwei.pro/business v0.0.0-20190113040521-5328bab446dd/go.mod h1:9Ftjgn0/yGnCxcnWJ+XjXRO9yLR3S3bjZWfm8noQYg8=
 tianwei.pro/business v0.0.1 h1:NKiNMw5kYhE6bHSekx0HJ0Q33HMNfNGg2W2JOiLiOH0=
 tianwei.pro/business v0.0.1/go.mod h1:9Ftjgn0/yGnCxcnWJ+XjXRO9yLR3S3bjZWfm8noQYg8=
+tianwei.pro/business v0.0.2 h1:2WVY6goX2b1+ZJQ29O595/HhtG5lQo7fStuizSblcAA=
+tianwei.pro/business v0.0.2/go.mod h1:9Ftjgn0/yGnCxcnWJ+XjXRO9yLR3S3bjZWfm8noQYg8=
 tianwei.pro/kit v0.0.0-20190108124826-8c52574fbcb8 h1:GHAitVfGGqqlheAObJblr34+xYH/IZicBYycR/DjcXM=
 tianwei.pro/kit v0.0.0-20190108124826-8c52574fbcb8/go.mod h1:/B8fqypxnWXQz1Iwdb24TLsfhJPlgV4BpJVih8X4Zg0=
 tianwei.pro/smart v0.0.0-20190112133427-8b1182c800b6 h1:Vw1MzHHJPt2hZtvBA4WVDGlEDq1hKhZR6t2A/k78nfc=

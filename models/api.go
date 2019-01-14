@@ -21,13 +21,17 @@ type Api struct {
 	Name string
 
 	// url路径
-	Path string
+	Path string `orm:"size(100)"`
 
 	// PUT/GET/DELETE/POST
-	Method string
+	Method string `orm:"size(20)"`
 
 	// 菜单和页面使用的那妞
 	Icon string
+
+	// 菜单排序
+	// 从小到大展示
+	Order int64
 
 	// api 类型
 	// Menu   菜单
@@ -39,7 +43,7 @@ type Api struct {
 	ParentId int64
 
 	// 本api来自哪个系统
-	BranchId int64
+	SystemId int64
 
 	// api当前状态
 	// 前端获取api状态，即可实现动态api更换

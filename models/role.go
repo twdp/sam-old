@@ -1,6 +1,9 @@
 package models
 
-import "tianwei.pro/business/model"
+import (
+	"github.com/astaxie/beego/orm"
+	"tianwei.pro/business/model"
+)
 
 // 部门角色
 type Role struct {
@@ -17,6 +20,17 @@ type Role struct {
 	// 这个角色是从哪个模板角色上映射出来的
 	FromId int64
 
+	// 本角色拥有的权限集
+	PermissionSet string `orm:"type(text)" json:"-"`
+}
 
+// 多字段唯一键
+func (r *Role) TableUnique() [][]string {
+	return [][]string{
+		{ "Name", "BranchId", },
+	}
+}
 
+func init() {
+	orm.RegisterModelWithPrefix("sam_", new(Role))
 }
