@@ -9,11 +9,16 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
+	"tianwei.pro/sam/controllers"
 )
 
 func init() {
-	ns := beego.NewNamespace("/v1",
-
+	ns := beego.NewNamespace("/v1/api",
+		beego.NSNamespace("/user",
+			beego.NSInclude(
+				&controllers.UserController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }

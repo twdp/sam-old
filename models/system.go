@@ -16,6 +16,9 @@ type System struct {
 
 	Secret string
 
+	// 是否需要保持登录
+	KeepSign bool
+
 	// 本系统是否使用数据权限
 	UseDataPermission bool
 

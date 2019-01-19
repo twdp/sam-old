@@ -54,7 +54,7 @@ type Api struct {
 // 多字段唯一键
 func (a *Api) TableUnique() [][]string {
 	return [][]string{
-		{ "Path", "Method", "BranchId", },
+		{ "Path", "Method", "SystemId", },
 	}
 }
 

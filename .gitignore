@@ -14,3 +14,4 @@
 sam
 *.tmp
 conf/app.conf
+commentsRouter*

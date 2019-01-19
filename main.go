@@ -1,10 +1,12 @@
 package main
 
 import (
+	_ "tianwei.pro/sam/models"
 	"github.com/astaxie/beego/orm"
 	_ "tianwei.pro/sam/routers"
 
 	"github.com/astaxie/beego"
+	_ "github.com/go-sql-driver/mysql" // import your used driver
 )
 
 func init() {
@@ -14,6 +16,13 @@ func init() {
 	beego.BConfig.EnableErrorsRender = false
 	beego.BConfig.WebConfig.Session.SessionOn = true
 	beego.BConfig.WebConfig.Session.SessionName = "sam"
+
+	// set default database
+
+	orm.RegisterDataBase("default", "mysql", beego.AppConfig.String("MysqlUrl") , 30)
+
+	// create table
+	orm.RunSyncdb("default", false, true)
 }
 
 func main() {
