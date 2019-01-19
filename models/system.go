@@ -1,7 +1,10 @@
 package models
 
 import (
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
+	"tianwei.pro/business"
 	"tianwei.pro/business/model"
 )
 
@@ -40,4 +43,16 @@ type System struct {
 
 func init() {
 	orm.RegisterModelWithPrefix("sam_", new(System))
+}
+
+func (s *System) FindByAppKey() error {
+	if err := orm.NewOrm().Read(s, "AppKey"); err != nil {
+		if business.IsNoRowsError(err) {
+			return errors.New("appkey错误")
+		} else {
+			logs.Error("find system by app key failed. s: %v, err: %v", s, err)
+			return errors.New("查询系统失败")
+		}
+	}
+	return nil
 }

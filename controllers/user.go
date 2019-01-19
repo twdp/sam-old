@@ -1,53 +1,141 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego/logs"
-	"github.com/dgrijalva/jwt-go"
+	"fmt"
+	"strings"
 	"tianwei.pro/business"
 	"tianwei.pro/business/controller"
-	"tianwei.pro/sam/facade"
 	"tianwei.pro/sam/models"
+)
+
+const (
+	base int64 = 1
+	position = base << 6
 )
 
 type UserController struct {
 	controller.RestfulController
 }
 
-type SamClaims struct {
-	jwt.StandardClaims
-	UserName string `json:"user_name;omitempty"`
-	Email string `json:"email;omitempty"`
-	Phone string `json:"phone;omitempty"`
-	Id int64 `json:"id;omitempty"`
-	Avatar string `json:"avatar;omitempty"`
-}
+// 验证app key
+// 获取用户信息
+// 根据系统信息和用户信息查找对应的角色列表
+// 是否需要查询数据权限信息，查出数据权限信息
+// 根据角色信息找出对应的菜单、按钮、页面信息
 
-// @router /login-by-email [post]
-func (u *UserController) LoginByEmail() {
-	email := u.GetString("email")
-	pass := u.GetString("password")
-
-	user := &models.User{ Email: email }
-	if err := user.FindByEmail(); err != nil {
+// role -> {
+// 	branchTree: {
+//
+//  }
+//  roleId:
+//  roleName: ,
+//  permissionUrls: [
+//   '/api/v1...'
+//  ],
+//  menuTrees: [
+//  	MenuTree
+//  ]
+// }
+// MenuTree: {
+// 		menu: ,
+//      type: ,
+//      menus: [ MenuTree ]
+// }
+// @router /permission [get]
+func (u *UserController) LoadPermission() {
+	appKey := u.GetString("app")
+	uid := u.GetSession(UserSessionName).(*models.User).Id
+	s := &models.System{ AppKey: appKey, }
+	if err := s.FindByAppKey(); err != nil {
 		u.E500(err.Error())
 	}
 
+	var roles []*models.Role
 
-
-	if _, err := business.ValidateCrypto(pass, user.Password); err != nil {
-		logs.Error("bcrypt compare hash failed. pass: %s, user: %v, err: %v", pass, user, err)
-		u.E500("账号或密码错误")
+	userRole := &models.UserRole{ UserId: uid, SystemId: s.Id }
+	if uroles, err := userRole.LoadByUserAndSystemId(); err != nil {
+		u.E500(err.Error())
+	} else if len(uroles) == 0 {
+		u.ReturnJson([]string{})
+	} else {
+		var roleIds []int64
+		for _, role := range uroles {
+			roleIds = append(roleIds, role.RoleId)
+		}
+		if rr, err := models.LoadByRoleIdsAndSystemIdAndStatus(roleIds, s.Id, models.Active); err != nil {
+			u.E500(err.Error())
+		} else {
+			roles = rr
+		}
 	}
 
-	if token, err := facade.T.EncodeToken(user); err != nil {
+	type UrlMap struct {
+		Path string
+		Method string
+		PermissionSet string `json:"-"`
+	}
+
+	type Response struct {
+
+		RoleName string `json:"role_name"`
+		RoleId int64 `json:"role_id"`
+		PermisisionUrls []*UrlMap `json:"permisision_urls"`
+	}
+	urlIds := make(map[int64]*UrlMap)
+
+	if apis, err := models.LoadApiBySystemAndStatus(s.Id, models.Active); err != nil {
 		u.E500(err.Error())
 	} else {
-		u.ReturnJson(map[string]interface{} {
-			"id": user.Id,
-			"user_name": user.UserName,
-			"email": user.Email,
-			"phone": user.Phone,
-			"token": token,
-		})
+		for _, api  := range apis {
+			ids := strings.Split(api.ReplaceIds, ",")
+			urlIds[api.Id] = &UrlMap{
+				Path: api.Path,
+				Method: api.Method,
+				PermissionSet: api.PermissionSet,
+			}
+			for _, id := range ids  {
+				if id == "" {
+					continue
+				}
+				urlIds[business.CastStringToInt64(id)] = &UrlMap{
+					Path: api.Path,
+					Method: api.Method,
+					PermissionSet: api.PermissionSet,
+				}
+			}
+		}
 	}
+
+
+
+	for _, role := range roles {
+		ps := strings.Split(role.PermissionSet, ",")
+		var per []*UrlMap
+
+		for index, p := range ps {
+			pp := business.CastStringToInt64(p)
+
+			var ii uint = 0
+			for pp > 0 {
+				if pp % 2 == 1 {
+					id := business.CastIntToInt64(index) * position + base << ii
+					if urlMap, exist := urlIds[id]; exist {
+						per = append(per, urlMap)
+					}
+				}
+				ii++
+				pp = pp / 2
+			}
+		}
+
+		r := &Response{
+			RoleId: role.Id,
+			RoleName: role.Name,
+			PermisisionUrls:per,
+		}
+		fmt.Println(r)
+	}
+
+	u.ReturnJson([]string{})
+
 }

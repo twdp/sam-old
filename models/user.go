@@ -12,6 +12,12 @@ var (
 	UserNotFound = errors.New("账号或密码错误")
 	SystemError = errors.New("获取用户信息失败")
 )
+
+const (
+	PC = iota
+	WXMP
+)
+
 type User struct {
 
 	model.Base
@@ -33,6 +39,8 @@ type User struct {
 	Type int8
 
 	Status int8
+
+	NeedLoginTerminus string `orm:"size(120)"`
 }
 
 

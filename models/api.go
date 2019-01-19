@@ -1,7 +1,9 @@
 package models
 
 import (
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 	"tianwei.pro/business/model"
 )
 
@@ -9,6 +11,12 @@ const (
 	Menu = iota
 	Page
 	Button
+)
+
+const (
+	Anonymous = iota
+	OnlyNeedLogin
+	CheckRolePermission
 )
 
 // todo:: 前端选择资源时，勾选的是哪一个框，就给后端哪一个框
@@ -49,6 +57,22 @@ type Api struct {
 	// 前端获取api状态，即可实现动态api更换
 	// 可以实现发布后，快速回滚
 	Status int8
+
+	// 可以匿名访问
+	// 只需要登录就可以看
+	// 需要进行角色权限验证
+	VerificationType int8
+
+	// 选择角色时是否展示
+	Display bool
+
+	// 替换的url id
+	// 比如： /v1/user/list 升级到/v2/user/list
+	//
+	ReplaceIds string `orm:"size(120)"`
+
+	// 权限集
+	PermissionSet string `orm:"size(100)"`
 }
 
 // 多字段唯一键
@@ -60,4 +84,14 @@ func (a *Api) TableUnique() [][]string {
 
 func init() {
 	orm.RegisterModelWithPrefix("sam_", new(Api))
+}
+
+func LoadApiBySystemAndStatus(systemId int64, status int8) ([]*Api, error) {
+	var apis []*Api
+	if _, err := orm.NewOrm().QueryTable(&Api{}).Filter("SystemId", systemId).Filter("Status", status).All(&apis); err != nil {
+		logs.Error("load api by system and status failed. systemId: %d, status: %d, err: %v", systemId, status, err)
+		return nil, errors.New("查询系统数据失败")
+	} else {
+		return apis, nil
+	}
 }

@@ -1,8 +1,16 @@
 package models
 
 import (
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
+	"github.com/pkg/errors"
 	"tianwei.pro/business/model"
+)
+
+const (
+	Init = iota
+	Active
+	Freeze
 )
 
 // 部门角色
@@ -13,6 +21,9 @@ type Role struct {
 	Name string
 
 	Status int8
+
+	// 角色属于哪个系统
+	SystemId int64
 
 	// 如果id=0并且系统是不拉平数据角色权限，那么这个角色就是模板角色
 	BranchId int64
@@ -33,4 +44,14 @@ func (r *Role) TableUnique() [][]string {
 
 func init() {
 	orm.RegisterModelWithPrefix("sam_", new(Role))
+}
+
+func LoadByRoleIdsAndSystemIdAndStatus(roleIds []int64, systemId int64, status int8) ([]*Role, error) {
+	var roles []*Role
+	if _, err := orm.NewOrm().QueryTable(&Role{}).Filter("SystemId", systemId).Filter("Status", status).Filter("id__in", roleIds).All(&roles); err != nil {
+		logs.Error("load by roleIds and systemId and status failed. roleIds: %v, systemId: %d, status: %d, err: %v", roles, systemId, status, err)
+		return nil, errors.New("查询用户角色失败")
+	} else {
+		return roles, nil
+	}
 }

@@ -13,6 +13,9 @@ import (
 type Function struct {
 	model.Base
 
+	// 功能点名称
+	Name string `orm:"size(64)"`
+
 	// 主id
 	MasterId int64 `orm:"unique"`
 
