@@ -36,6 +36,8 @@ github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7a
 github.com/gogo/protobuf v1.2.0/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
 github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=
 github.com/gomodule/redigo v2.0.0+incompatible/go.mod h1:B4C85qUVwatsJoIUNIfCRsp7qO0iAmpGFZ4EELWSbC4=
+github.com/hprose/hprose-golang v2.0.4+incompatible h1:xUZLSShgv5+KCfK3RCsac8DyWKxBPt9hH3KK3TA1f0c=
+github.com/hprose/hprose-golang v2.0.4+incompatible/go.mod h1:FfwwCUQFF3f5t03SrzdSghXVZkC01uEJS6Xwzcz0NOo=
 github.com/imdario/mergo v0.3.6/go.mod h1:2EnlNZ0deacrJVfApfmtdGgDfMuh/nq6Ok1EcJh5FfA=
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/mattn/go-sqlite3 v1.10.0/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
@@ -87,6 +89,8 @@ tianwei.pro/business v0.0.6 h1:jiNgRkxs/eEJmnf0fYuiVt2yJvTmDZix8TAdTKevOQQ=
 tianwei.pro/business v0.0.6/go.mod h1:9Ftjgn0/yGnCxcnWJ+XjXRO9yLR3S3bjZWfm8noQYg8=
 tianwei.pro/kit v0.0.0-20190108124826-8c52574fbcb8 h1:GHAitVfGGqqlheAObJblr34+xYH/IZicBYycR/DjcXM=
 tianwei.pro/kit v0.0.0-20190108124826-8c52574fbcb8/go.mod h1:/B8fqypxnWXQz1Iwdb24TLsfhJPlgV4BpJVih8X4Zg0=
+tianwei.pro/sam-agent v0.0.0-20190121112005-4e1b6d452954 h1:7KRkSQf8SnwXFsc8NOBRhat6ao6f1J1qydIdFaLNqTA=
+tianwei.pro/sam-agent v0.0.0-20190121112005-4e1b6d452954/go.mod h1:f00Ld/3d6QW9P4QZcDlJ4SZP8gFJmtGlH9IPcveDtNs=
 tianwei.pro/smart v0.0.0-20190112133427-8b1182c800b6 h1:Vw1MzHHJPt2hZtvBA4WVDGlEDq1hKhZR6t2A/k78nfc=
 tianwei.pro/smart v0.0.0-20190112133427-8b1182c800b6/go.mod h1:DBr4ZgK7y6+rMBGAeI6fDKvAuophuTxw0e15v4DClDw=
 tianwei.pro/smart v0.0.0-20190113040010-d33287b8e896 h1:iL1mUAi5/ZC52HQBemo+rhDQaHDzc7PwwvQ1AXrQD0s=
