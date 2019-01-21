@@ -22,11 +22,10 @@ type System struct {
 	// 是否需要保持登录
 	KeepSign bool
 
-	// 本系统是否使用数据权限
-	UseDataPermission bool
-
-	// 数据权限和角色是否拉平
-	Lateral bool
+	// 0 不需要数据权限
+	// 1 数据权限与操作 权限拉平
+	// 2 层级数据权限和操作权限
+	Strategy int8
 
 
 	// 使用了模板角色，是否对模板角色可见

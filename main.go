@@ -1,8 +1,8 @@
 package main
 
 import (
-	_ "tianwei.pro/sam/models"
 	"github.com/astaxie/beego/orm"
+	_ "tianwei.pro/sam/models"
 	_ "tianwei.pro/sam/routers"
 
 	"github.com/astaxie/beego"
@@ -33,5 +33,11 @@ func main() {
 		beego.BConfig.EnableErrorsShow = false
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
 	}
+
+	//beego.InsertFilter("/*",beego.BeforeRouter, func(context *context.Context) {
+	//	context.ResponseWriter.WriteHeader(http.StatusUnauthorized)
+	//	context.ResponseWriter.Write([]byte("请重新登录"))
+	//})
+
 	beego.Run()
 }
