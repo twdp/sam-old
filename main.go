@@ -37,10 +37,5 @@ func main() {
 
 	beego.InsertFilter("/*", beego.BeforeRouter, sam_agent.SamFilter)
 
-	//beego.InsertFilter("/*",beego.BeforeRouter, func(context *context.Context) {
-	//	context.ResponseWriter.WriteHeader(http.StatusUnauthorized)
-	//	context.ResponseWriter.Write([]byte("请重新登录"))
-	//})
-
 	beego.Run()
 }

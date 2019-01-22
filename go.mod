@@ -19,6 +19,6 @@ require (
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 	tianwei.pro/business v0.0.6
-	tianwei.pro/sam-agent v0.0.0-20190121141701-5a33b58b39c1 // indirect
+	tianwei.pro/sam-agent v0.0.0-20190122011748-9281ecff5173 // indirect
 	tianwei.pro/smart v0.0.0-20190113040010-d33287b8e896 // indirect
 )
