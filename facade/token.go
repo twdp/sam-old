@@ -45,6 +45,7 @@ func init() {
 			priv: priv,
 			pub: pub,
 		}
+
 	}
 }
 

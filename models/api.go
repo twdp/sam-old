@@ -95,3 +95,13 @@ func LoadApiBySystemAndStatus(systemId int64, status int8) ([]*Api, error) {
 		return apis, nil
 	}
 }
+
+func LoadApiBySystemAndStatusAndType(systemId int64, status int8, urlType int8) ([]*Api, error) {
+	var apis []*Api
+	if _, err := orm.NewOrm().QueryTable(&Api{}).Filter("SystemId", systemId).Filter("Status", status).Filter("Type", urlType).All(&apis); err != nil {
+		logs.Error("load api by system and status failed. systemId: %d, status: %d, err: %v", systemId, status, err)
+		return nil, errors.New("查询系统数据失败")
+	} else {
+		return apis, nil
+	}
+}

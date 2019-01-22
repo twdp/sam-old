@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/astaxie/beego/orm"
 	"tianwei.pro/sam-agent"
+	_ "tianwei.pro/sam/upper"
 	_ "tianwei.pro/sam/models"
 	_ "tianwei.pro/sam/routers"
 
