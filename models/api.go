@@ -7,18 +7,6 @@ import (
 	"tianwei.pro/business/model"
 )
 
-const (
-	Menu = iota
-	Page
-	Button
-)
-
-const (
-	Anonymous = iota
-	OnlyNeedLogin
-	CheckRolePermission
-)
-
 // todo:: 前端选择资源时，勾选的是哪一个框，就给后端哪一个框
 // 后端需要根据选择的资源，向上递归，找出页面和按钮
 type Api struct {

@@ -105,6 +105,8 @@ tianwei.pro/sam-agent v0.0.0-20190122143039-698cca8337ca h1:HSPs9qnKqDYcGtemtK4n
 tianwei.pro/sam-agent v0.0.0-20190122143039-698cca8337ca/go.mod h1:f00Ld/3d6QW9P4QZcDlJ4SZP8gFJmtGlH9IPcveDtNs=
 tianwei.pro/sam-agent v0.0.0-20190122145039-7b050b0cc812 h1:zWiipw0AU/TmXza8bV3T2702F2n2KijrrrK43nZVv1c=
 tianwei.pro/sam-agent v0.0.0-20190122145039-7b050b0cc812/go.mod h1:f00Ld/3d6QW9P4QZcDlJ4SZP8gFJmtGlH9IPcveDtNs=
+tianwei.pro/sam-agent v0.0.0-20190123082400-9d4e6ae294fa h1:gStRJLcP5op6XJgLAEs1DHFylUul7uli5zm2/0d9uvM=
+tianwei.pro/sam-agent v0.0.0-20190123082400-9d4e6ae294fa/go.mod h1:f00Ld/3d6QW9P4QZcDlJ4SZP8gFJmtGlH9IPcveDtNs=
 tianwei.pro/smart v0.0.0-20190112133427-8b1182c800b6 h1:Vw1MzHHJPt2hZtvBA4WVDGlEDq1hKhZR6t2A/k78nfc=
 tianwei.pro/smart v0.0.0-20190112133427-8b1182c800b6/go.mod h1:DBr4ZgK7y6+rMBGAeI6fDKvAuophuTxw0e15v4DClDw=
 tianwei.pro/smart v0.0.0-20190113040010-d33287b8e896 h1:iL1mUAi5/ZC52HQBemo+rhDQaHDzc7PwwvQ1AXrQD0s=

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	"tianwei.pro/business/model"
 )
@@ -26,4 +27,13 @@ func (b *Branch) TableUnique() [][]string {
 
 func init() {
 	orm.RegisterModelWithPrefix("sam_", new(Branch))
+}
+
+func FindByPid(pid int64) ([]*Branch, error) {
+	var childrens []*Branch
+	if _, err := orm.NewOrm().QueryTable(&Branch{}).Filter("ParentId", pid).All(&childrens); err != nil {
+		logs.Error("branch find by pid failed. err: %v", err)
+		return nil, err
+	}
+	return childrens, nil
 }

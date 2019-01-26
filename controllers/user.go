@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"fmt"
 	"strings"
 	"tianwei.pro/business"
 	"tianwei.pro/business/controller"
+	"tianwei.pro/sam-agent"
+	"tianwei.pro/sam/facade"
 	"tianwei.pro/sam/models"
 )
 
@@ -44,29 +45,16 @@ type UserController struct {
 // @router /permission [get]
 func (u *UserController) LoadPermission() {
 	appKey := u.GetString("app")
-	uid := u.GetSession(UserSessionName).(*models.User).Id
+	uid := u.GetSession(sam_agent.SamUserInfoSessionKey).(*sam_agent.UserInfo).Id
 	s := &models.System{ AppKey: appKey, }
 	if err := s.FindByAppKey(); err != nil {
 		u.E500(err.Error())
 	}
 
-	var roles []*models.Role
-
-	userRole := &models.UserRole{ UserId: uid, SystemId: s.Id }
-	if uroles, err := userRole.LoadByUserAndSystemId(); err != nil {
+	var roles, err = facade.FindOwnRoles(uid, s.Id)
+	if err != nil {
 		u.E500(err.Error())
-	} else if len(uroles) == 0 {
-		u.ReturnJson([]string{})
-	} else {
-		var roleIds []int64
-		for _, role := range uroles {
-			roleIds = append(roleIds, role.RoleId)
-		}
-		if rr, err := models.LoadByRoleIdsAndSystemIdAndStatus(roleIds, s.Id, models.Active); err != nil {
-			u.E500(err.Error())
-		} else {
-			roles = rr
-		}
+		return
 	}
 
 	type UrlMap struct {
@@ -107,6 +95,7 @@ func (u *UserController) LoadPermission() {
 	}
 
 
+	var responses []*Response
 
 	for _, role := range roles {
 		ps := strings.Split(role.PermissionSet, ",")
@@ -133,9 +122,9 @@ func (u *UserController) LoadPermission() {
 			RoleName: role.Name,
 			PermisisionUrls:per,
 		}
-		fmt.Println(r)
+		responses = append(responses, r)
 	}
 
-	u.ReturnJson([]string{})
+	u.ReturnJson(responses)
 
 }

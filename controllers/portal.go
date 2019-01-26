@@ -6,6 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"tianwei.pro/business"
 	"tianwei.pro/business/controller"
+	"tianwei.pro/sam-agent"
 	"tianwei.pro/sam/facade"
 	"tianwei.pro/sam/models"
 )
@@ -13,10 +14,6 @@ import (
 type PortalController struct {
 	controller.RestfulController
 }
-
-const (
-	UserSessionName = "_sam_user_info"
-)
 
 type SamClaims struct {
 	jwt.StandardClaims
@@ -45,10 +42,14 @@ func (u *PortalController) LoginByEmail() {
 	if token, err := facade.T.EncodeToken(user); err != nil {
 		u.E500(err.Error())
 	} else {
-		user.Password = ""
-		u.SetSession(UserSessionName, user)
-
 		u.SetSecureCookie(beego.AppConfig.DefaultString("tokenSecret", "__sam__"), "_sam_token_", token, beego.AppConfig.DefaultInt64("tokenExpire", 24 * 60 * 30) * 3600, "", "", "", true)
+
+		if agentUserInfo, err := sam_agent.SamAgent.VerifyToken(beego.AppConfig.String("appKey"), beego.AppConfig.String("secret"), token); err != nil {
+			u.E500("系统错误")
+			return
+		} else {
+			u.SetSession(sam_agent.SamUserInfoSessionKey, agentUserInfo)
+		}
 		u.ReturnJson(map[string]interface{} {
 			"id": user.Id,
 			"user_name": user.UserName,

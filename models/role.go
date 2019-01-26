@@ -7,12 +7,6 @@ import (
 	"tianwei.pro/business/model"
 )
 
-const (
-	Init = iota
-	Active
-	Freeze
-)
-
 // 部门角色
 type Role struct {
 
@@ -38,7 +32,7 @@ type Role struct {
 // 多字段唯一键
 func (r *Role) TableUnique() [][]string {
 	return [][]string{
-		{ "Name", "BranchId", },
+		{ "Name", "BranchId", "SystemId", },
 	}
 }
 
@@ -46,9 +40,9 @@ func init() {
 	orm.RegisterModelWithPrefix("sam_", new(Role))
 }
 
-func LoadByRoleIdsAndSystemIdAndStatus(roleIds []int64, systemId int64, status int8) ([]*Role, error) {
+func LoadByRolesAndStatus(systemId int64, status int8) ([]*Role, error) {
 	var roles []*Role
-	if _, err := orm.NewOrm().QueryTable(&Role{}).Filter("SystemId", systemId).Filter("Status", status).Filter("id__in", roleIds).All(&roles); err != nil {
+	if _, err := orm.NewOrm().QueryTable(&Role{}).Filter("SystemId", systemId).Filter("Status", status).All(&roles); err != nil {
 		logs.Error("load by roleIds and systemId and status failed. roleIds: %v, systemId: %d, status: %d, err: %v", roles, systemId, status, err)
 		return nil, errors.New("查询用户角色失败")
 	} else {

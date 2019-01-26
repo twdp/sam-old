@@ -13,11 +13,6 @@ var (
 	SystemError = errors.New("获取用户信息失败")
 )
 
-const (
-	PC = iota
-	WXMP
-)
-
 type User struct {
 
 	model.Base
