@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
-	"github.com/dgrijalva/jwt-go"
 	"tianwei.pro/business"
 	"tianwei.pro/business/controller"
 	"tianwei.pro/sam-agent"
@@ -11,19 +10,17 @@ import (
 	"tianwei.pro/sam/models"
 )
 
+// portal管理接口
 type PortalController struct {
 	controller.RestfulController
 }
 
-type SamClaims struct {
-	jwt.StandardClaims
-	UserName string `json:"user_name;omitempty"`
-	Email string `json:"email;omitempty"`
-	Phone string `json:"phone;omitempty"`
-	Id int64 `json:"id;omitempty"`
-	Avatar string `json:"avatar;omitempty"`
-}
-
+// @Title 邮箱登录接口
+// @Description 根据邮箱和密码进行登录
+// @Param email query string true "需要登录的邮箱"
+// @Param password query string true "密码"
+// @Success 200 {object} map
+// @Failure 500 {string} 错误信息
 // @router /login-by-email [post]
 func (u *PortalController) LoginByEmail() {
 	email := u.GetString("email")
@@ -58,10 +55,4 @@ func (u *PortalController) LoginByEmail() {
 			"token": token,
 		})
 	}
-}
-
-// @router /logout [post]
-func (u *PortalController) Logout() {
-	u.SetSecureCookie(beego.AppConfig.DefaultString("tokenSecret", "__sam__"), "_sam_token_", "", -1)
-
 }

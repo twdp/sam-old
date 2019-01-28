@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/astaxie/beego"
 	"strings"
 	"tianwei.pro/business"
 	"tianwei.pro/business/controller"
@@ -45,6 +46,10 @@ type UserController struct {
 // @router /permission [get]
 func (u *UserController) LoadPermission() {
 	appKey := u.GetString("app")
+	if u.GetSession(sam_agent.SamUserInfoSessionKey) == nil {
+		u.E500("请重新登录")
+		return
+	}
 	uid := u.GetSession(sam_agent.SamUserInfoSessionKey).(*sam_agent.UserInfo).Id
 	s := &models.System{ AppKey: appKey, }
 	if err := s.FindByAppKey(); err != nil {
@@ -127,4 +132,10 @@ func (u *UserController) LoadPermission() {
 
 	u.ReturnJson(responses)
 
+}
+
+
+// @router /logout [post]
+func (u *PortalController) Logout() {
+	u.SetSecureCookie(beego.AppConfig.DefaultString("tokenSecret", "__sam__"), "_sam_token_", "", -1)
 }

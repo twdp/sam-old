@@ -20,7 +20,7 @@ require (
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 	tianwei.pro/beego-guava v0.0.0-20190108132444-348c37386e91
-	tianwei.pro/business v0.0.6
+	tianwei.pro/business v0.0.8
 	tianwei.pro/sam-agent v0.0.0-20190123082400-9d4e6ae294fa
 	tianwei.pro/smart v0.0.0-20190113040010-d33287b8e896
 )

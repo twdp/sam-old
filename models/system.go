@@ -13,6 +13,8 @@ type System struct {
 
 	model.Base
 
+	Status int8
+
 	Name string
 
 	AppKey string `orm:"size(64);unique"`

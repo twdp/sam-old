@@ -15,3 +15,4 @@ sam
 *.tmp
 conf/app.conf
 commentsRouter*
+swagger.zip
