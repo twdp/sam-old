@@ -1,8 +1,11 @@
 package upper
 
 import (
+	"context"
 	"github.com/astaxie/beego/logs"
 	"github.com/pkg/errors"
+	"github.com/smallnest/rpcx/client"
+	"github.com/smallnest/rpcx/server"
 	"tianwei.pro/sam-agent"
 	"tianwei.pro/sam/facade"
 	"tianwei.pro/sam/models"
@@ -13,15 +16,30 @@ var (
 	SystemError         = errors.New("权限系统错误")
 )
 
-type SamFilterImpl struct {
-	TokenFacade facade.TokenFacade `inject:"tokenFacade"`
+var  SamAgentFacade *SamAgentFacadeImpl
+
+type SamAgentFacadeImpl struct {
 }
 
-func init() {
-	sam_agent.SamAgent = &SamFilterImpl{}
+func init()  {
+	s := server.NewServer()
+	addRegistryPlugin(s)
+
+	SamAgentFacade = new(SamAgentFacadeImpl)
+	s.RegisterName("SamAgentFacadeImpl", SamAgentFacade, "")
+
+	go func() {
+		s.Serve("tcp", "localhost:0")
+	}()
 }
 
-func (s *SamFilterImpl) verifySecret(appKey, secret string) (*models.System, error) {
+func addRegistryPlugin(s *server.Server) {
+	r := client.InprocessClient
+	s.Plugins.Add(r)
+}
+
+
+func (s *SamAgentFacadeImpl) verifySecret(appKey, secret string) (*models.System, error) {
 	if system, err := facade.FindByKey(appKey); err != nil {
 		logs.Warn("app key: %s not found", appKey)
 		return nil, AppKeyOrSecretError
@@ -34,17 +52,17 @@ func (s *SamFilterImpl) verifySecret(appKey, secret string) (*models.System, err
 	}
 }
 
-func (s *SamFilterImpl) LoadSystemInfo(appKey, secret string) (*sam_agent.SystemInfo, error) {
-	system, err := s.verifySecret(appKey, secret)
+func (s *SamAgentFacadeImpl) LoadSystemInfo(ctx context.Context, param *sam_agent.SystemInfoParam, reply *sam_agent.SystemInfo) error {
+	system, err := s.verifySecret(param.AppKey, param.Secret)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	var apis []*sam_agent.Router
 
 	if sApis, err := models.LoadApiBySystemAndStatusAndType(system.Id, models.Active, models.Button); err != nil {
 		logs.Error("load api failed. err: %v", err)
-		return nil, SystemError
+		return SystemError
 	} else {
 		for _, api := range sApis {
 			apis = append(apis, &sam_agent.Router{
@@ -55,22 +73,30 @@ func (s *SamFilterImpl) LoadSystemInfo(appKey, secret string) (*sam_agent.System
 			})
 		}
 	}
-	return &sam_agent.SystemInfo{
-		Id:             system.Id,
-		PermissionType: system.Strategy,
-		KeepSign:       system.KeepSign,
-		Routers:        apis,
-	}, nil
+
+	reply.Id = system.Id
+	reply.PermissionType = system.Strategy
+	reply.KeepSign = system.KeepSign
+	reply.Routers = apis
+	return nil
 }
 
-func (s *SamFilterImpl) VerifyToken(appKey, secret, token string) (*sam_agent.UserInfo, error) {
-	system, err := s.verifySecret(appKey, secret)
+func (s *SamAgentFacadeImpl) VerifyToken(ctx context.Context, param *sam_agent.VerifyTokenParam, reply *sam_agent.UserInfo) error {
+	system, err := s.verifySecret(param.AppKey, param.Secret)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	if user, err := facade.T.DecodeToken(token); err != nil {
-		return nil, err
+	if user, err := facade.T.DecodeToken(param.Token); err != nil {
+		return err
+	} else if r, err := facade.LoadAgentUserInfo(user.Id, system, user.UserName); err != nil {
+		return err
 	} else {
-		return facade.LoadAgentUserInfo(user.Id, system, user.UserName)
+		reply.Id = r.Id
+		reply.UserName = r.UserName
+		reply.Avatar = r.Avatar
+		reply.Email = r.Email
+		reply.Phone = r.Phone
+		reply.Permissions = r.Permissions
+		return nil
 	}
 }

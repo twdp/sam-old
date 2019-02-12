@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"tianwei.pro/business"
@@ -8,6 +9,7 @@ import (
 	"tianwei.pro/sam-agent"
 	"tianwei.pro/sam/facade"
 	"tianwei.pro/sam/models"
+	"tianwei.pro/sam/upper"
 )
 
 // portal管理接口
@@ -41,7 +43,14 @@ func (u *PortalController) LoginByEmail() {
 	} else {
 		u.SetSecureCookie(beego.AppConfig.DefaultString("tokenSecret", "__sam__"), "_sam_token_", token, beego.AppConfig.DefaultInt64("tokenExpire", 24 * 60 * 30) * 3600, "", "", "", true)
 
-		if agentUserInfo, err := sam_agent.SamAgent.VerifyToken(beego.AppConfig.String("appKey"), beego.AppConfig.String("secret"), token); err != nil {
+		agentUserInfo := &sam_agent.UserInfo{}
+		param := &sam_agent.VerifyTokenParam{
+			SystemInfoParam: sam_agent.SystemInfoParam{
+				AppKey: beego.AppConfig.String("appKey"),
+				Secret: beego.AppConfig.String("secret"),
+			},
+		}
+		if err := upper.SamAgentFacade.VerifyToken(context.Background(), param, agentUserInfo); err != nil {
 			u.E500("系统错误")
 			return
 		} else {
